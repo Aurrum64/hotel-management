@@ -40,7 +40,7 @@ const MainNav = () => (
   <StyledNav>
     <ul>
       {config.map(({ url, title, icon }) => (
-        <li>
+        <li key={title}>
           <StyledNavLink to={url}>
             <>
               {icon}
