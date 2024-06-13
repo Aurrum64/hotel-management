@@ -1,4 +1,4 @@
-import Button, { ButtonSize, ButtonVariant } from "./Button";
+import Button, { ButtonSize, ButtonVariant } from "./button";
 
 export default Button;
 export { ButtonSize, ButtonVariant };
