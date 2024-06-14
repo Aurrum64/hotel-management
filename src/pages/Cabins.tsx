@@ -1,19 +1,27 @@
-import { useEffect } from "react";
-import Heading from "../ui/Heading";
-import Row from "../ui/Row";
+import { useQuery } from "@tanstack/react-query";
 import getCabins from "../services/getCabins";
+import CabinTable from "../features/cabins/CabinTable";
+import Row from "../ui/Row";
+import { RowOrientation } from "../ui/Row/row";
+import Heading from "../ui/Heading";
 
 function Cabins() {
-  useEffect(() => {
-    getCabins();
-  }, []);
+  const { data: cabins, isPending: cabinsAreLoading } = useQuery({
+    queryKey: ["cabins"],
+    queryFn: getCabins,
+  });
 
-  return (
-    <Row type="horizontal">
-      <Heading as="h1">All cabins</Heading>
-      <p>TEST</p>
-    </Row>
-  );
+  return cabins ? (
+    <>
+      <Row orientation={RowOrientation.Horizontal}>
+        <Heading>All Cabins</Heading>
+        <p>Filter / Sort</p>
+      </Row>
+      <Row>
+        <CabinTable data={cabins} />
+      </Row>
+    </>
+  ) : null;
 }
 
 export default Cabins;
