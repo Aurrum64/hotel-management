@@ -1,6 +1,6 @@
 import supabase from "../supabase";
 
-const deleteCabins = async (id: number) => {
+const deleteCabin = async (id: number) => {
     const { error } = await supabase
     .from('cabins')
     .delete()
@@ -12,4 +12,4 @@ const deleteCabins = async (id: number) => {
   }
 };
 
-export default deleteCabins;
+export default deleteCabin;

@@ -1,4 +1,4 @@
-import { ComponentPropsWithoutRef } from "react";
+import { ComponentPropsWithoutRef, forwardRef } from "react";
 import styled from "styled-components";
 import { sizes, variants } from "./config";
 
@@ -15,19 +15,30 @@ export enum ButtonSize {
 }
 
 type ButtonProps = ComponentPropsWithoutRef<"button"> & {
-  variant: ButtonVariant;
-  size: ButtonSize;
+  variant?: ButtonVariant;
+  size?: ButtonSize;
 };
 
-const Button = ({
-  variant = ButtonVariant.Primary,
-  size = ButtonSize.Medium,
-  children,
-  ...props
-}: ButtonProps) => (
-  <StyledButton $variant={variant} $size={size} type="button" {...props}>
-    {children}
-  </StyledButton>
+const Button = forwardRef<HTMLButtonElement, ButtonProps>(
+  (
+    {
+      variant = ButtonVariant.Primary,
+      size = ButtonSize.Medium,
+      children,
+      ...props
+    },
+    ref
+  ) => (
+    <StyledButton
+      $variant={variant}
+      $size={size}
+      type="button"
+      ref={ref}
+      {...props}
+    >
+      {children}
+    </StyledButton>
+  )
 );
 
 const StyledButton = styled.button<{
