@@ -142,7 +142,8 @@ const CreateCabinForm = ({ cabinToEdit }: CreateCabinFormProps) => {
   );
 };
 
-const FormRow = styled.div`
+// TODO combine two Forms / remove sharing of styles
+export const FormRow = styled.div`
   display: grid;
   align-items: center;
   grid-template-columns: 24rem 1fr 1.2fr;
@@ -169,7 +170,7 @@ const FormRow = styled.div`
   }
 `;
 
-const Label = styled.label`
+export const Label = styled.label`
   font-weight: 500;
 `;
 
