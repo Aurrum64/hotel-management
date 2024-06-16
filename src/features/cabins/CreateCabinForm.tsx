@@ -7,17 +7,24 @@ import FileInput from "../../ui/FileInput";
 import Textarea from "../../ui/Textarea";
 import { useForm } from "react-hook-form";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import createCabin from "../../services/createCabin";
+import createEditCabin from "../../services/createEditCabin";
 import toast from "react-hot-toast";
 
-function CreateCabinForm() {
+type CreateCabinFormProps = {
+  cabinToEdit?: any;
+};
+
+const CreateCabinForm = ({ cabinToEdit }: CreateCabinFormProps) => {
   const queryClient = useQueryClient();
 
-  const { register, handleSubmit, reset, formState, getValues } = useForm();
+  const { register, handleSubmit, reset, formState, getValues } = useForm({
+    defaultValues: cabinToEdit ? { ...cabinToEdit } : {},
+  });
   const { errors } = formState;
 
   const { mutate: createCabinMutation } = useMutation({
-    mutationFn: createCabin,
+    // TODO
+    mutationFn: (data: any) => createEditCabin(data),
     onSuccess: () => {
       toast.success("Succesfully created.");
       queryClient.invalidateQueries({ queryKey: ["cabins"] });
@@ -26,9 +33,25 @@ function CreateCabinForm() {
     onError: () => toast.error("The cabin cannot be created."),
   });
 
+  const { mutate: editCabinMutation } = useMutation({
+    // TODO
+    mutationFn: (data: any) => createEditCabin(data, cabinToEdit.id),
+    onSuccess: () => {
+      toast.success("Succesfully edited.");
+      queryClient.invalidateQueries({ queryKey: ["cabins"] });
+      reset();
+    },
+    onError: () => toast.error("The cabin cannot be edited."),
+  });
+
   // TODO Remove any
   const onFormSubmit = (data: any) => {
-    createCabinMutation({ ...data, image: data.image[0] });
+    cabinToEdit
+      ? editCabinMutation({
+          ...data,
+          image: typeof data?.image === "string" ? data.image : data.image[0],
+        })
+      : createCabinMutation({ ...data, image: data.image[0] });
   };
 
   return (
@@ -107,17 +130,22 @@ function CreateCabinForm() {
         <FileInput
           id="image"
           accept="image/*"
-          {...register("image" /* { required: "This field is required" } */)}
+          {...register(
+            "image",
+            cabinToEdit ? {} : { required: "This field is required" }
+          )}
         />
       </FormRow>
 
       <FormRow>
         <Button type="reset">Cancel</Button>
-        <Button type="submit">Add cabin</Button>
+        <Button type="submit">{`${
+          cabinToEdit ? "Edit" : "Create"
+        } cabin`}</Button>
       </FormRow>
     </Form>
   );
-}
+};
 
 const FormRow = styled.div`
   display: grid;
