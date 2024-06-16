@@ -6,6 +6,8 @@ import { useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 import { useState } from "react";
 import CreateCabinForm from "./CreateCabinForm";
+import { HiPencil, HiSquare2Stack, HiTrash } from "react-icons/hi2";
+import { useCreateCabin } from "./useCreateCabin";
 
 type CabinProps = {
   id: number;
@@ -31,6 +33,7 @@ const CabinTableRow = (cabin: CabinProps) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
   const queryClient = useQueryClient();
+  const { createCabinMutation } = useCreateCabin();
 
   const { mutate: deleteCabinMutation } = useMutation({
     mutationFn: deleteCabin,
@@ -50,8 +53,25 @@ const CabinTableRow = (cabin: CabinProps) => {
         <Price>{formatCurrency(regularPrice)}</Price>
         <Discount>{formatCurrency(discount)}</Discount>
         <div>
-          <button onClick={() => setIsOpen((isOpen) => !isOpen)}>Edit</button>
-          <button onClick={() => deleteCabinMutation(id)}>Delete</button>
+          <button
+            onClick={() => {
+              let cabinCopy = {
+                ...cabin,
+                name: `Copy of ${cabin.name}`,
+              };
+              delete cabinCopy.id;
+              delete cabinCopy.created_at;
+              createCabinMutation(cabinCopy);
+            }}
+          >
+            <HiSquare2Stack />
+          </button>
+          <button onClick={() => setIsOpen((isOpen) => !isOpen)}>
+            <HiPencil />
+          </button>
+          <button onClick={() => deleteCabinMutation(id)}>
+            <HiTrash />
+          </button>
         </div>
       </TableRow>
       {isOpen && <CreateCabinForm cabinToEdit={cabin} />}

@@ -4,7 +4,7 @@ import supabase, { supabaseUrl } from "../supabase";
 const createEditCabin = async (cabin: any, id?: number) => {
   const imageIsReset = typeof cabin.image !== 'string';
   console.log('imageIsReset', imageIsReset);
-  debugger
+
   const imageName = `${Math.random()}-${cabin.image.name}`.replaceAll("/", "");
 
   const imagePath = `${supabaseUrl}/storage/v1/object/public/cabin-images/${imageName}`;

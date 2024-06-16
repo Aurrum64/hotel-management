@@ -22,24 +22,13 @@ const CreateCabinForm = ({ cabinToEdit }: CreateCabinFormProps) => {
   });
   const { errors } = formState;
 
-  const { mutate: createCabinMutation } = useMutation({
-    // TODO
-    mutationFn: (data: any) => createEditCabin(data),
-    onSuccess: () => {
-      toast.success("Succesfully created.");
-      queryClient.invalidateQueries({ queryKey: ["cabins"] });
-      reset();
-    },
-    onError: () => toast.error("The cabin cannot be created."),
-  });
-
   const { mutate: editCabinMutation } = useMutation({
     // TODO
     mutationFn: (data: any) => createEditCabin(data, cabinToEdit.id),
     onSuccess: () => {
       toast.success("Succesfully edited.");
       queryClient.invalidateQueries({ queryKey: ["cabins"] });
-      reset();
+      // reset();
     },
     onError: () => toast.error("The cabin cannot be edited."),
   });
@@ -47,11 +36,17 @@ const CreateCabinForm = ({ cabinToEdit }: CreateCabinFormProps) => {
   // TODO Remove any
   const onFormSubmit = (data: any) => {
     cabinToEdit
-      ? editCabinMutation({
-          ...data,
-          image: typeof data?.image === "string" ? data.image : data.image[0],
-        })
-      : createCabinMutation({ ...data, image: data.image[0] });
+      ? editCabinMutation(
+          {
+            ...data,
+            image: typeof data?.image === "string" ? data.image : data.image[0],
+          },
+          { onSuccess: () => reset() }
+        )
+      : createCabinMutation(
+          { ...data, image: data.image[0] },
+          { onSuccess: () => reset() }
+        );
   };
 
   return (
