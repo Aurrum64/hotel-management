@@ -1,9 +1,13 @@
 import styled from "styled-components";
 import { formatCurrency } from "../../utils/helpers";
 import { useMutation } from "@tanstack/react-query";
-import deleteCabins from "../../services/deleteCabins";
+import deleteCabin from "../../services/deleteCabin";
 import { useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
+import { useState } from "react";
+import CreateCabinForm from "./CreateCabinForm";
+import { HiPencil, HiSquare2Stack, HiTrash } from "react-icons/hi2";
+import { useCreateCabin } from "./useCreateCabin";
 
 type CabinProps = {
   id: number;
@@ -16,17 +20,23 @@ type CabinProps = {
   image: string;
 };
 
-const CabinTableRow = ({
-  id,
-  name,
-  max_capacity: maxCapacity,
-  regular_price: regularPrice,
-  discount,
-}: CabinProps) => {
-  const queryClient = useQueryClient();
+const CabinTableRow = (cabin: CabinProps) => {
+  const {
+    id,
+    name,
+    max_capacity: maxCapacity,
+    regular_price: regularPrice,
+    discount,
+    image,
+  } = cabin;
 
-  const { isPending, mutate } = useMutation({
-    mutationFn: deleteCabins,
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+
+  const queryClient = useQueryClient();
+  const { createCabinMutation } = useCreateCabin();
+
+  const { mutate: deleteCabinMutation } = useMutation({
+    mutationFn: deleteCabin,
     onSuccess: () => {
       toast.success("Succesfully deleted.");
       queryClient.invalidateQueries({ queryKey: ["cabins"] });
@@ -35,14 +45,37 @@ const CabinTableRow = ({
   });
 
   return (
-    <TableRow>
-      <Img src="https://ldgkibmeadawgotmcrwh.supabase.co/storage/v1/object/public/cabin-images/cabin-007.jpg" />
-      <Cabin>{name}</Cabin>
-      <div>Fits up to {maxCapacity} guests</div>
-      <Price>{formatCurrency(regularPrice)}</Price>
-      <Discount>{formatCurrency(discount)}</Discount>
-      <button onClick={() => mutate(id)}>Delete</button>
-    </TableRow>
+    <>
+      <TableRow>
+        <Img src={image} alt="cabin depiction" />
+        <Cabin>{name}</Cabin>
+        <div>Fits up to {maxCapacity} guests</div>
+        <Price>{formatCurrency(regularPrice)}</Price>
+        <Discount>{formatCurrency(discount)}</Discount>
+        <div>
+          <button
+            onClick={() => {
+              let cabinCopy = {
+                ...cabin,
+                name: `Copy of ${cabin.name}`,
+              };
+              delete cabinCopy.id;
+              delete cabinCopy.created_at;
+              createCabinMutation(cabinCopy);
+            }}
+          >
+            <HiSquare2Stack />
+          </button>
+          <button onClick={() => setIsOpen((isOpen) => !isOpen)}>
+            <HiPencil />
+          </button>
+          <button onClick={() => deleteCabinMutation(id)}>
+            <HiTrash />
+          </button>
+        </div>
+      </TableRow>
+      {isOpen && <CreateCabinForm cabinToEdit={cabin} />}
+    </>
   );
 };
 
