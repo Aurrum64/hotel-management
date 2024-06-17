@@ -5,7 +5,11 @@ import {
   cloneElement,
   createContext,
   useContext,
+  useEffect,
+  useRef,
   useState,
+  LegacyRef,
+  MouseEvent,
 } from "react";
 import { createPortal } from "react-dom";
 import { HiOutlineXMark } from "react-icons/hi2";
@@ -17,13 +21,19 @@ type ModalProps = ComponentPropsWithoutRef<"div"> & {
 
 type ModalContextProps = {
   isVisible: boolean;
-  open?: () => void;
-  close?: () => void;
+  open: () => void;
+  close: () => void;
 };
 
-const ModalContext = createContext<ModalContextProps>({ isVisible: false });
+const ModalContext = createContext<ModalContextProps | undefined>(undefined);
 
-// const useModalContext = () => {};
+const useModalContext = () => {
+  const context = useContext(ModalContext);
+  if (!context)
+    throw new Error("useModalContext must be used within ModalCompound");
+
+  return context;
+};
 
 const ModalCompound = ({ children }: PropsWithChildren) => {
   const [isVisible, setIsVisible] = useState<boolean>(false);
@@ -39,19 +49,29 @@ const ModalCompound = ({ children }: PropsWithChildren) => {
 };
 
 const Open = ({ children }: { children: ReactElement }) => {
-  const { open } = useContext(ModalContext);
+  const { open } = useModalContext();
 
   return cloneElement(children, { onClick: open });
 };
 
 const Window = ({ children, onClose }: ModalProps) => {
-  const { isVisible, close } = useContext(ModalContext);
+  const { isVisible, close } = useModalContext();
+  const windowRef = useRef<LegacyRef<HTMLDivElement> | undefined>(undefined);
+
+  useEffect(() => {
+    const handleClick = ({ target }: MouseEvent) =>
+      windowRef.current && !windowRef.current.contains(target) && close();
+
+    document.addEventListener("click", handleClick, true);
+
+    return () => document.removeEventListener("click", handleClick, true);
+  }, [close]);
 
   if (!isVisible) return null;
 
   return createPortal(
     <Overlay>
-      <StyledModal>
+      <StyledModal ref={windowRef}>
         <Button onClick={close}>
           <HiOutlineXMark />
         </Button>
