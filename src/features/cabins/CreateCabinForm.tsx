@@ -12,9 +12,10 @@ import toast from "react-hot-toast";
 
 type CreateCabinFormProps = {
   cabinToEdit?: any;
+  onClose?: () => void;
 };
 
-const CreateCabinForm = ({ cabinToEdit }: CreateCabinFormProps) => {
+const CreateCabinForm = ({ cabinToEdit, onClose }: CreateCabinFormProps) => {
   const queryClient = useQueryClient();
 
   const { register, handleSubmit, reset, formState, getValues } = useForm({
@@ -50,7 +51,7 @@ const CreateCabinForm = ({ cabinToEdit }: CreateCabinFormProps) => {
   };
 
   return (
-    <Form onSubmit={handleSubmit(onFormSubmit)}>
+    <Form onSubmit={handleSubmit(onFormSubmit)} type="modal">
       <FormRow>
         <Label htmlFor="name">Cabin name</Label>
         <Input
@@ -133,7 +134,9 @@ const CreateCabinForm = ({ cabinToEdit }: CreateCabinFormProps) => {
       </FormRow>
 
       <FormRow>
-        <Button type="reset">Cancel</Button>
+        <Button type="reset" onClick={onClose}>
+          Cancel
+        </Button>
         <Button type="submit">{`${
           cabinToEdit ? "Edit" : "Create"
         } cabin`}</Button>
