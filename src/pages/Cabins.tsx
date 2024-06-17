@@ -7,9 +7,11 @@ import Heading from "../ui/Heading";
 import { useState } from "react";
 import CreateCabinForm from "../features/cabins/CreateCabinForm";
 import Button, { ButtonSize, ButtonVariant } from "../ui/button";
+import Modal from "../ui/Modal";
+import ModalCompound from "../ui/ModalCompound";
 
 function Cabins() {
-  const [isOpen, setIsOpen] = useState<boolean>(false);
+  // const [isVisible, setIsVisible] = useState<boolean>(false);
 
   const { data: cabins, isPending: cabinsAreLoading } = useQuery({
     queryKey: ["cabins"],
@@ -25,14 +27,26 @@ function Cabins() {
       <Row>
         <CabinTable data={cabins} />
       </Row>
-      <Button
+      {/* <Button
         variant={ButtonVariant.Primary}
         size={ButtonSize.Medium}
-        onClick={() => setIsOpen((isOpen) => !isOpen)}
+        onClick={() => setIsVisible(true)}
       >
         Toggle Form
       </Button>
-      {isOpen && <CreateCabinForm />}
+      {isVisible && (
+        <Modal onClose={() => setIsVisible(false)}>
+          <CreateCabinForm onClose={() => setIsVisible(false)} />
+        </Modal>
+      )} */}
+      <ModalCompound>
+        <ModalCompound.Open>
+          <Button>Toggle Form</Button>
+        </ModalCompound.Open>
+        <ModalCompound.Window>
+          <CreateCabinForm />
+        </ModalCompound.Window>
+      </ModalCompound>
     </>
   ) : null;
 }
