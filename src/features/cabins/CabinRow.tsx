@@ -1,13 +1,10 @@
 import styled from "styled-components";
 import { formatCurrency } from "../../utils/helpers";
-import { useMutation } from "@tanstack/react-query";
-import deleteCabin from "../../services/deleteCabin";
-import { useQueryClient } from "@tanstack/react-query";
-import toast from "react-hot-toast";
 import { useState } from "react";
 import CreateCabinForm from "./CreateCabinForm";
 import { HiPencil, HiSquare2Stack, HiTrash } from "react-icons/hi2";
 import { useCreateCabin } from "./useCreateCabin";
+import { useDeleteCabin } from "./api/useDeleteCabin";
 
 type CabinProps = {
   id: number;
@@ -32,17 +29,8 @@ const CabinTableRow = (cabin: CabinProps) => {
 
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
-  const queryClient = useQueryClient();
   const { createCabinMutation } = useCreateCabin();
-
-  const { mutate: deleteCabinMutation } = useMutation({
-    mutationFn: deleteCabin,
-    onSuccess: () => {
-      toast.success("Succesfully deleted.");
-      queryClient.invalidateQueries({ queryKey: ["cabins"] });
-    },
-    onError: () => toast.error("The cabin cannot be deleted."),
-  });
+  const { deleteCabinMutation } = useDeleteCabin();
 
   return (
     <>

@@ -1,5 +1,5 @@
 import { createClient } from "@supabase/supabase-js";
-import { Database } from './types/supabase_schema'
+import { Database } from './types/supabase-schema'
 
 export const supabaseUrl = "https://ldgkibmeadawgotmcrwh.supabase.co";
 

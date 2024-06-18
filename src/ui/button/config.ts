@@ -3,7 +3,7 @@ import { css } from "styled-components";
 const sizes = {
   small: css`
     font-size: 1.2rem;
-    padding: 0.4rem 0.8rem;
+    padding: 0.6rem 1rem;
     text-transform: uppercase;
     font-weight: 600;
     text-align: center;

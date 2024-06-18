@@ -1,5 +1,6 @@
 import Heading from "../ui/heading";
 import Row from "../ui/row";
+import Table from "../ui/table";
 
 function Account() {
   return (
@@ -15,6 +16,7 @@ function Account() {
         <Heading>Update password</Heading>
         <p>Update user password form</p>
       </Row>
+      <Table />
     </>
   );
 }

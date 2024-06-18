@@ -15,7 +15,10 @@ type CreateCabinFormProps = {
   onClose?: () => void;
 };
 
-const CreateCabinForm = ({ cabinToEdit, onClose }: CreateCabinFormProps) => {
+const CreateEditCabinForm = ({
+  cabinToEdit,
+  onClose,
+}: CreateCabinFormProps) => {
   const queryClient = useQueryClient();
 
   const { register, handleSubmit, reset, formState, getValues } = useForm({
@@ -182,4 +185,4 @@ const Error = styled.span`
   color: var(--color-red-700);
 `;
 
-export default CreateCabinForm;
+export default CreateEditCabinForm;
