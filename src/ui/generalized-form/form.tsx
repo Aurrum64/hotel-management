@@ -50,11 +50,10 @@ const Form = ({
   } = useForm();
 
   useEffect(() => {
-    if (defaultValues) {
-      for (var key of Object.keys(defaultValues)) {
-        setValue(key, defaultValues[key]);
-      }
-    }
+    defaultValues &&
+      Object.entries(defaultValues).forEach(([key, value]) =>
+        setValue(key, value)
+      );
   }, [getValues, setValue, defaultValues]);
 
   return (
