@@ -1,9 +1,8 @@
 import { FocusEvent } from "react";
-import Form from "../../ui/Form";
-import Input from "../../ui/input";
-import { FormRow, Label } from "../cabins/CreateCabinForm";
-import { useGetSettings } from "./useGetSettings";
-import { useUpdateSetting } from "./useUpdateSettings";
+import { useGetSettings } from "./api/useGetSettings";
+import { useUpdateSetting } from "./api/useUpdateSettings";
+import From from "../../ui/generalized-form";
+import { FormControlProps } from "../../ui/generalized-form/form";
 
 function UpdateSettingsForm() {
   const { settings } = useGetSettings();
@@ -13,50 +12,43 @@ function UpdateSettingsForm() {
     key: string,
     { target: { value } }: FocusEvent<HTMLInputElement, Element>
   ) => {
+    console.log("updateSettings");
     if (!value) return;
     updateSettingMutation({ [key]: Number(value) });
   };
 
-  return (
-    <Form>
-      <FormRow>
-        <Label htmlFor="name">Minimum nights/booking</Label>
-        <Input
-          type="number"
-          id="min-nights"
-          defaultValue={settings?.min_booking_period || 0}
-          onBlur={(e) => updateSettings("min_booking_period", e)}
-        />
-      </FormRow>
-      <FormRow>
-        <Label htmlFor="name">Maximum nights/booking</Label>
-        <Input
-          type="number"
-          id="max-nights"
-          defaultValue={settings?.max_booking_period || 0}
-          onBlur={(e) => updateSettings("max_booking_period", e)}
-        />
-      </FormRow>
-      <FormRow>
-        <Label htmlFor="name">Maximum guests/booking</Label>
-        <Input
-          type="number"
-          id="max-guests"
-          defaultValue={settings?.max_guests_per_booking || 0}
-          onBlur={(e) => updateSettings("max_guests_per_booking", e)}
-        />
-      </FormRow>
-      <FormRow>
-        <Label htmlFor="name">Breakfast price</Label>
-        <Input
-          type="number"
-          id="breakfast-price"
-          defaultValue={settings?.breakfast_price || 0}
-          onBlur={(e) => updateSettings("breakfast_price", e)}
-        />
-      </FormRow>
-    </Form>
-  );
+  const formData: FormControlProps[] = [
+    {
+      label: "Minimum nights/booking",
+      id: "min-nights",
+      type: "number",
+      defaultValue: settings?.min_booking_period || 0,
+      onBlur: (e) => updateSettings("min_booking_period", e as any), // TODO remove any
+    },
+    {
+      label: "Maximum nights/booking",
+      id: "max-nights",
+      type: "number",
+      defaultValue: settings?.max_booking_period || 0,
+      onBlur: (e) => updateSettings("max_booking_period", e as any), // TODO remove any
+    },
+    {
+      label: "Maximum guests/booking",
+      id: "max-guests",
+      type: "number",
+      defaultValue: settings?.max_guests_per_booking || 0,
+      onBlur: (e) => updateSettings("max_guests_per_booking", e as any), // TODO remove any
+    },
+    {
+      label: "Breakfast price",
+      id: "breakfast-price",
+      type: "number",
+      defaultValue: settings?.breakfast_price || 0,
+      onBlur: (e) => updateSettings("breakfast_price", e as any), // TODO remove any
+    },
+  ];
+
+  return <From controls={formData} />;
 }
 
 export default UpdateSettingsForm;

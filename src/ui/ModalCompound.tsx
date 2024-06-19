@@ -35,7 +35,8 @@ const useModalContext = () => {
   return context;
 };
 
-const ModalCompound = ({ children }: PropsWithChildren) => {
+const ModalCompound = ({ children, ...rest }: PropsWithChildren) => {
+  console.log("rest", rest);
   const [isVisible, setIsVisible] = useState<boolean>(false);
 
   const open = () => setIsVisible(true);
@@ -75,7 +76,7 @@ const Window = ({ children, onClose }: ModalProps) => {
         <Button onClick={close}>
           <HiOutlineXMark />
         </Button>
-        {children}
+        {cloneElement(children, { onClose: close })}
       </StyledModal>
     </Overlay>,
     document.body

@@ -6,7 +6,7 @@ import { HiPencil, HiSquare2Stack, HiTrash } from "react-icons/hi2";
 import { useCreateCabin } from "./useCreateCabin";
 import { useDeleteCabin } from "./api/useDeleteCabin";
 
-type CabinProps = {
+export type CabinProps = {
   id: number;
   name: string;
   created_at: string;
