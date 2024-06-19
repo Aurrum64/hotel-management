@@ -3,7 +3,6 @@ import supabase, { supabaseUrl } from "../supabase";
 // TODO remove any
 const createEditCabin = async (cabin: any, id?: number) => {
   const imageIsReset = typeof cabin.image !== 'string';
-  console.log('imageIsReset', imageIsReset);
 
   const imageName = `${Math.random()}-${cabin.image.name}`.replaceAll("/", "");
 
