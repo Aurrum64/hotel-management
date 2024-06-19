@@ -36,7 +36,6 @@ const useModalContext = () => {
 };
 
 const ModalCompound = ({ children, ...rest }: PropsWithChildren) => {
-  console.log("rest", rest);
   const [isVisible, setIsVisible] = useState<boolean>(false);
 
   const open = () => setIsVisible(true);

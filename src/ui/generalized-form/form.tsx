@@ -1,5 +1,5 @@
 import styled, { css } from "styled-components";
-import { FocusEvent, ReactElement } from "react";
+import { FocusEvent, ReactElement, useEffect } from "react";
 import Input from "../input";
 import { useForm, RegisterOptions } from "react-hook-form";
 import Textarea from "../Textarea";
@@ -12,6 +12,7 @@ export type FormControlProps = {
   label?: string;
   type?: FormControlType;
   required?: boolean;
+  disabled?: boolean;
   validations?: Omit<RegisterOptions, "required">;
   // defaultValue?: string | number;
   onBlur?: <T>(e: FocusEvent<T, Element>) => void;
@@ -19,11 +20,13 @@ export type FormControlProps = {
 
 type FormProps = {
   controls: FormControlProps[];
-  onFormSubmit: (data: any) => void; // TODO Check any
+  // Submition might occure on custom onBlur
+  onFormSubmit?: (data: any) => void; // TODO Check any
   type?: "regular" | "modal";
   onOkText?: string;
   onClose?: () => void;
   defaultValues?: SimpleMap<string | number>;
+  withFooterButtons?: boolean;
 };
 
 type FormControlType = "text" | "number" | "description" | "image";
@@ -35,6 +38,7 @@ const Form = ({
   onOkText = "Submit",
   onClose,
   defaultValues,
+  withFooterButtons = true,
 }: FormProps) => {
   const {
     register,
@@ -42,7 +46,16 @@ const Form = ({
     reset,
     formState: { errors },
     getValues,
+    setValue,
   } = useForm();
+
+  useEffect(() => {
+    if (defaultValues) {
+      for (var key of Object.keys(defaultValues)) {
+        setValue(key, defaultValues[key]);
+      }
+    }
+  }, [getValues, setValue, defaultValues]);
 
   return (
     <StyledForm $type={type} onSubmit={handleSubmit(onFormSubmit)}>
@@ -59,8 +72,6 @@ const Form = ({
             // ...validations,
             required: required ? "This field is required" : undefined,
           };
-
-          const defaultValue = defaultValues?.[id];
 
           const wrapIntoFormRow = (control: ReactElement) => (
             <FormRow key={id}>
@@ -79,19 +90,13 @@ const Form = ({
                 <Input
                   type={type}
                   id={id}
-                  defaultValue={defaultValue}
                   {...register(id, options)}
                   {...rest}
                 />
               );
             case "description":
               return wrapIntoFormRow(
-                <Textarea
-                  id={id}
-                  defaultValue={defaultValue}
-                  {...register(id, options)}
-                  {...rest}
-                />
+                <Textarea id={id} {...register(id, options)} {...rest} />
               );
             case "image":
               return wrapIntoFormRow(
@@ -106,12 +111,14 @@ const Form = ({
           }
         }
       )}
-      <FormRow>
-        <Button type="reset" onClick={onClose}>
-          Cancel
-        </Button>
-        <Button type="submit">{onOkText}</Button>
-      </FormRow>
+      {withFooterButtons && (
+        <FormRow>
+          <Button type="reset" onClick={onClose}>
+            Cancel
+          </Button>
+          <Button type="submit">{onOkText}</Button>
+        </FormRow>
+      )}
       {/* <FormRow>
         <Label htmlFor="name">Cabin name</Label>
         <Input

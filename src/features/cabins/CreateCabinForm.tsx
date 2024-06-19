@@ -13,7 +13,6 @@ const CreateEditCabinForm = ({
   cabinToEdit,
   onClose,
 }: CreateCabinFormProps) => {
-  console.log("cabinToEdit", cabinToEdit);
   const formData: FormControlProps[] = [
     {
       label: "Cabin name",
