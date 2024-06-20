@@ -7,6 +7,7 @@ import { ColDef } from "@ag-grid-community/core";
 import Spinner from "../Spinner";
 import styled from "styled-components";
 import { ReactNode } from "react";
+import { Pagination } from "./components/pagination";
 
 type FilterType = "eq" | "gt" | "gte" | "lt" | "lte";
 
@@ -47,7 +48,7 @@ const Table = ({
   rightToolbarItems,
   filter,
 }: TableProps) => {
-  const { data, isPending } = useFetchTableData(tableName, filter);
+  const { data, count, isPending } = useFetchTableData(tableName, filter);
 
   return (
     <TableContainer>
@@ -66,6 +67,7 @@ const Table = ({
           />
         )}
       </AgGridReactContainer>
+      <Pagination count={count || 0} />
     </TableContainer>
   );
 };
