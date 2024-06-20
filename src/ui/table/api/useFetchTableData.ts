@@ -3,32 +3,32 @@ import {fetchDataByTableName} from "../../../services/fetchDataByTableName";
 import { TableName } from "../../../types/table-name";
 import { SimpleMap } from "../../../types/common-types";
 import { useSearchParams } from "react-router-dom";
-import { TableFilterParams } from "../Table";
+import { Filter, FilterBySearchParam, FilterConfig, FilterTransformTemplate } from "../Table";
 
-export type TableFilter = {
-  fieldName: string;
-  fieldValue?: string;
-  type?: string;
-}
-
-export const useFetchTableData = (tableName: TableName, filterParams?: TableFilterParams) => {
-    
-    const { fieldName, transformFieldValueExpression, type} = filterParams || {};
-
+export const useFetchTableData = (tableName: TableName, filterConfig?: FilterConfig) => {
     const [searchParams] = useSearchParams();
-    const filteringFieldValue = searchParams.get(filterParams?.fieldName || "");
 
-    let filter: TableFilter;
-    if (filterParams && filteringFieldValue) {
-      filter = {
-        fieldName,
-        fieldValue: transformFieldValueExpression ? transformFieldValueExpression(filteringFieldValue) : filteringFieldValue,
-        type: typeof type === 'function' ? type(filteringFieldValue) : type
+    let filter: Filter;
+
+    if (filterConfig) {
+    const filteringFieldValue = searchParams.get(filterConfig.queryParamName);
+
+    if (filteringFieldValue) {
+      // TODO This transform logic is way too custom and probably should be living outside of the table component
+      if ((filterConfig as FilterTransformTemplate)?.transformTemplate) {
+        filter = (filterConfig  as FilterTransformTemplate).transformTemplate(filteringFieldValue);
+      } else {
+        const { queryParamName, type } = filterConfig as FilterBySearchParam || {};
+        queryParamName && (filter = {
+          fieldName: queryParamName,
+          fieldValue: filteringFieldValue,
+          type: type || 'eq'
+        });
       }
     }
-
+  }
     const { data, isPending } = useQuery<SimpleMap<any>[]>({
-        queryKey: [tableName, filteringFieldValue],
+        queryKey: [tableName, filter],
         queryFn: () => fetchDataByTableName(tableName, filter),
       });
     return { data, isPending }

@@ -8,18 +8,36 @@ import Spinner from "../Spinner";
 import styled from "styled-components";
 import { ReactNode } from "react";
 
-export type TableFilterParams = {
-  fieldName: string;
-  transformFieldValueExpression?: (fieldValue: string) => string | undefined;
-  type?: "eq" | "gte" | "lte" | ((fieldValue: string) => string | undefined);
+type FilterType = "eq" | "gt" | "gte" | "lt" | "lte";
+
+export type Filter =
+  | {
+      fieldName: string;
+      fieldValue: string;
+      type: FilterType;
+    }
+  | undefined;
+
+export type QueryParamName = {
+  queryParamName: string;
 };
+
+export type FilterBySearchParam = QueryParamName & {
+  type?: FilterType;
+};
+
+export type FilterTransformTemplate = QueryParamName & {
+  transformTemplate: (fieldValue: string) => Filter;
+};
+
+export type FilterConfig = FilterBySearchParam | FilterTransformTemplate;
 
 type TableProps = {
   tableName: TableName;
   columns?: ColDef[];
   leftToolbarItems?: ReactNode[];
   rightToolbarItems?: ReactNode[];
-  filter?: TableFilterParams;
+  filter?: FilterConfig;
 };
 
 const Table = ({

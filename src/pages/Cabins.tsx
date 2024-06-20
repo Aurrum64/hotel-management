@@ -12,6 +12,7 @@ import {
   DISCOUNT_FILTERING_QUERY_PARAM,
   useRadioButtonForFiltering,
 } from "../features/cabins/hooks/useRadioButtonForFiltering";
+import { Filter } from "../ui/table/Table";
 
 function Cabins() {
   const { deleteCabinMutation } = useDeleteCabin();
@@ -66,16 +67,24 @@ function Cabins() {
       tableName="cabins"
       columns={colDefs}
       filter={{
-        fieldName: DISCOUNT_FILTERING_QUERY_PARAM,
-        transformFieldValueExpression: (value: string) => {
-          if (value === "no-discount") return "0";
-          if (value === "with-discount") return "1";
-          return undefined;
-        },
-        type: (value: string) => {
-          if (value === "no-discount") return "eq";
-          if (value === "with-discount") return "gte";
-          return undefined;
+        queryParamName: DISCOUNT_FILTERING_QUERY_PARAM,
+        transformTemplate: (fieldValue: string) => {
+          const filter: Filter = {
+            fieldName: DISCOUNT_FILTERING_QUERY_PARAM,
+            fieldValue: "0",
+            type: "eq",
+          };
+          switch (fieldValue) {
+            case "no-discount":
+              return filter;
+            case "with-discount":
+              return {
+                ...filter,
+                type: "gt",
+              };
+            default:
+              return undefined;
+          }
         },
       }}
       leftToolbarItems={[<Heading>All Cabins</Heading>]}
