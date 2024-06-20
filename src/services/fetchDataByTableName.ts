@@ -1,6 +1,7 @@
 import supabase from "../supabase";
 import { TableName } from "../types/table-name";
-import { Filter } from "../ui/table/Table";
+import { ROWS_PER_PAGE } from "../ui/table/constants/constants";
+import { Filter } from "../ui/table/types/types";
 
 const fetchDataByTableName = async (tableName: TableName, page: number, filter?: Filter) => {
  
@@ -13,8 +14,8 @@ const fetchDataByTableName = async (tableName: TableName, page: number, filter?:
   }
 
   if (page) {
-    const from = (page - 1) * 10;
-    const to = from + 10 - 1;
+    const from = (page - 1) * ROWS_PER_PAGE;
+    const to = from + ROWS_PER_PAGE - 1;
     query = query.range(from, to);
   }
 

@@ -1,22 +1,22 @@
 import { HiChevronLeft, HiChevronRight } from "react-icons/hi2";
 import { useSearchParams } from "react-router-dom";
 import styled from "styled-components";
+import {
+  PAGINATION_QUERY_PARAM_NAME,
+  ROWS_PER_PAGE,
+} from "../constants/constants";
+import { getCurrentPage, getTotalPages } from "../utils/helpers";
 
 type PaginationProps = {
   count: number;
   rowsPerPage?: number;
 };
 
-export const PAGINATION_QUERY_PARAM_NAME = "page";
-
-export const Pagination = ({ count, rowsPerPage = 10 }: PaginationProps) => {
+export const Pagination = ({ count }: PaginationProps) => {
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const currentPage = !searchParams.get(PAGINATION_QUERY_PARAM_NAME)
-    ? 1
-    : Number(searchParams.get(PAGINATION_QUERY_PARAM_NAME));
-
-  const pageCount = Math.ceil(count / rowsPerPage);
+  const currentPage = getCurrentPage(searchParams);
+  const pageCount = getTotalPages(count);
 
   if (pageCount < 2) return null;
 
@@ -35,9 +35,9 @@ export const Pagination = ({ count, rowsPerPage = 10 }: PaginationProps) => {
   return (
     <PaginationContainer>
       <StyledP>
-        Showing <span>{(currentPage - 1) * rowsPerPage + 1}</span> to{" "}
+        Showing <span>{(currentPage - 1) * ROWS_PER_PAGE + 1}</span> to{" "}
         <span>
-          {currentPage === pageCount ? count : currentPage * rowsPerPage}
+          {currentPage === pageCount ? count : currentPage * ROWS_PER_PAGE}
         </span>{" "}
         of <span>{count}</span>
       </StyledP>

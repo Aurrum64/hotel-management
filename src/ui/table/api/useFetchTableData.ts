@@ -1,20 +1,9 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { fetchDataByTableName } from "../../../services/fetchDataByTableName";
 import { TableName } from "../../../types/table-name";
-import { SimpleMap } from "../../../types/common-types";
 import { useSearchParams } from "react-router-dom";
-import {
-  Filter,
-  FilterBySearchParam,
-  FilterConfig,
-  FilterTransformTemplate,
-} from "../Table";
-import { PAGINATION_QUERY_PARAM_NAME } from "../components/pagination";
-
-type TableData = {
-  data: SimpleMap<any>[];
-  count: number | null;
-};
+import { getCurrentPage, getTotalPages } from "../utils/helpers";
+import { Filter, FilterBySearchParam, FilterConfig, FilterTransformTemplate, TableData } from "../types/types";
 
 export const useFetchTableData = (
   tableName: TableName,
@@ -47,18 +36,16 @@ export const useFetchTableData = (
     }
   }
 
-  // TODO Move to a separate function
-  const currentPage = !searchParams.get(PAGINATION_QUERY_PARAM_NAME)
-    ? 1
-    : Number(searchParams.get(PAGINATION_QUERY_PARAM_NAME));
+  const currentPage = getCurrentPage(searchParams);
 
   const { data: tableData, isPending } = useQuery<TableData>({
     queryKey: [tableName, filter, currentPage],
     queryFn: () => fetchDataByTableName(tableName, currentPage, filter),
   });
+
   const { data, count } = tableData || {};
 
-  const pageCount = Math.ceil(count || 0 / 10);
+  const pageCount = getTotalPages(count || 0);
 
   if (currentPage < pageCount) {
     queryCLient.prefetchQuery({

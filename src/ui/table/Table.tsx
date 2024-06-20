@@ -8,30 +8,7 @@ import Spinner from "../Spinner";
 import styled from "styled-components";
 import { ReactNode } from "react";
 import { Pagination } from "./components/pagination";
-
-type FilterType = "eq" | "gt" | "gte" | "lt" | "lte";
-
-export type Filter =
-  | {
-      fieldName: string;
-      fieldValue: string;
-      type: FilterType;
-    }
-  | undefined;
-
-export type QueryParamName = {
-  queryParamName: string;
-};
-
-export type FilterBySearchParam = QueryParamName & {
-  type?: FilterType;
-};
-
-export type FilterTransformTemplate = QueryParamName & {
-  transformTemplate: (fieldValue: string) => Filter;
-};
-
-export type FilterConfig = FilterBySearchParam | FilterTransformTemplate;
+import { FilterConfig } from "./types/types";
 
 type TableProps = {
   tableName: TableName;
@@ -86,7 +63,6 @@ const ToolbarItems = styled.div`
   justify-content: space-between;
   align-items: center;
   padding: 1rem 1rem;
-  // overflow: hidden;
   height: auto;
   max-height: 100px;
 `;
