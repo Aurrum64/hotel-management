@@ -8,11 +8,18 @@ import Spinner from "../Spinner";
 import styled from "styled-components";
 import { ReactNode } from "react";
 
+export type TableFilterParams = {
+  fieldName: string;
+  transformFieldValueExpression?: (fieldValue: string) => string | undefined;
+  type?: "eq" | "gte" | "lte" | ((fieldValue: string) => string | undefined);
+};
+
 type TableProps = {
   tableName: TableName;
   columns?: ColDef[];
   leftToolbarItems?: ReactNode[];
   rightToolbarItems?: ReactNode[];
+  filter?: TableFilterParams;
 };
 
 const Table = ({
@@ -20,8 +27,9 @@ const Table = ({
   columns,
   leftToolbarItems,
   rightToolbarItems,
+  filter,
 }: TableProps) => {
-  const { data, isPending } = useFetchTableData(tableName);
+  const { data, isPending } = useFetchTableData(tableName, filter);
 
   return (
     <TableContainer>

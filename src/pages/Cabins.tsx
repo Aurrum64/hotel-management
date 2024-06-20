@@ -8,18 +8,20 @@ import { ColDef, ICellRendererParams } from "@ag-grid-community/core";
 import { HiPencil, HiSquare2Stack, HiTrash } from "react-icons/hi2";
 import { useDeleteCabin } from "../features/cabins/api/useDeleteCabin";
 import { useCreateCabin } from "../features/cabins/useCreateCabin";
+import {
+  DISCOUNT_FILTERING_QUERY_PARAM,
+  useRadioButtonForFiltering,
+} from "../features/cabins/hooks/useRadioButtonForFiltering";
 
 function Cabins() {
   const { deleteCabinMutation } = useDeleteCabin();
   const { createCabinMutation } = useCreateCabin();
+  const filteringRadioButton = useRadioButtonForFiltering();
 
   const colDefs: ColDef[] = [
-    /* { field: "created_at", flex: 1 }, */
     { field: "name", flex: 2, minWidth: 200 },
     { field: "description", flex: 2, minWidth: 200 },
     { field: "discount", flex: 1, minWidth: 100 },
-    /* { field: "id", flex: 1 }, */
-    /* { field: "image", flex: 1 }, */
     { field: "max_capacity", flex: 1, minWidth: 100 },
     { field: "regular_price", flex: 1, minWidth: 100 },
     {
@@ -63,8 +65,22 @@ function Cabins() {
     <Table
       tableName="cabins"
       columns={colDefs}
+      filter={{
+        fieldName: DISCOUNT_FILTERING_QUERY_PARAM,
+        transformFieldValueExpression: (value: string) => {
+          if (value === "no-discount") return "0";
+          if (value === "with-discount") return "1";
+          return undefined;
+        },
+        type: (value: string) => {
+          if (value === "no-discount") return "eq";
+          if (value === "with-discount") return "gte";
+          return undefined;
+        },
+      }}
       leftToolbarItems={[<Heading>All Cabins</Heading>]}
       rightToolbarItems={[
+        filteringRadioButton,
         <ModalCompound key="createCabin">
           <ModalCompound.Open>
             <Button size={ButtonSize.Small}>Create Cabin</Button>
