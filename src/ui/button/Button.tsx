@@ -1,6 +1,7 @@
 import { ComponentPropsWithoutRef, forwardRef } from "react";
 import styled from "styled-components";
 import { sizes, variants } from "./config";
+import SpinnerMini from "../SpinnerMini";
 
 export enum ButtonVariant {
   Primary = "primary",
@@ -17,6 +18,7 @@ export enum ButtonSize {
 type ButtonProps = ComponentPropsWithoutRef<"button"> & {
   variant?: ButtonVariant;
   size?: ButtonSize;
+  loading?: boolean;
 };
 
 const Button = forwardRef<HTMLButtonElement, ButtonProps>(
@@ -24,6 +26,7 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     {
       variant = ButtonVariant.Primary,
       size = ButtonSize.Medium,
+      loading,
       children,
       ...props
     },
@@ -36,7 +39,7 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       ref={ref}
       {...props}
     >
-      {children}
+      {loading ? <SpinnerMini /> : children}
     </StyledButton>
   )
 );

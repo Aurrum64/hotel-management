@@ -12,7 +12,7 @@ import {
   DISCOUNT_FILTERING_QUERY_PARAM,
   useRadioButtonForFiltering,
 } from "../features/cabins/hooks/useRadioButtonForFiltering";
-import { Filter } from "../ui/table/Table";
+import { Filter } from "../ui/table/types/types";
 
 function Cabins() {
   const { deleteCabinMutation } = useDeleteCabin();

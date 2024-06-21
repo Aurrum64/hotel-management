@@ -1,4 +1,4 @@
-import supabase, { supabaseUrl } from "../supabase";
+import supabase, { SUPABASE_URL } from "../supabase";
 
 // TODO remove any
 const createEditCabin = async (cabin: any, id?: number) => {
@@ -6,7 +6,7 @@ const createEditCabin = async (cabin: any, id?: number) => {
 
   const imageName = `${Math.random()}-${cabin.image.name}`.replaceAll("/", "");
 
-  const imagePath = `${supabaseUrl}/storage/v1/object/public/cabin-images/${imageName}`;
+  const imagePath = `${SUPABASE_URL}/storage/v1/object/public/cabin-images/${imageName}`;
 
   let query = supabase.from('cabins');
 
