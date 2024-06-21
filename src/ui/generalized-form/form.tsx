@@ -6,6 +6,7 @@ import Textarea from "../Textarea";
 import FileInput from "../FileInput";
 import Button from "../button";
 import { SimpleMap } from "../../types/common-types";
+import SpinnerMini from "../SpinnerMini";
 
 export type FormControlProps = {
   id: string;
@@ -27,9 +28,16 @@ type FormProps = {
   onClose?: () => void;
   defaultValues?: SimpleMap<string | number>;
   withFooterButtons?: boolean;
+  loading?: boolean;
 };
 
-type FormControlType = "text" | "number" | "description" | "image";
+type FormControlType =
+  | "text"
+  | "number"
+  | "description"
+  | "image"
+  | "email"
+  | "password";
 
 const Form = ({
   controls,
@@ -39,6 +47,7 @@ const Form = ({
   onClose,
   defaultValues,
   withFooterButtons = true,
+  loading,
 }: FormProps) => {
   const {
     register,
@@ -85,6 +94,8 @@ const Form = ({
           switch (type) {
             case "text":
             case "number":
+            case "email":
+            case "password":
               return wrapIntoFormRow(
                 <Input
                   type={type}
@@ -115,7 +126,9 @@ const Form = ({
           <Button type="reset" onClick={onClose}>
             Cancel
           </Button>
-          <Button type="submit">{onOkText}</Button>
+          <Button type="submit" loading={loading}>
+            {onOkText}
+          </Button>
         </FormRow>
       )}
       {/* <FormRow>
