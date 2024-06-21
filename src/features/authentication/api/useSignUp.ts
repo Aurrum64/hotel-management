@@ -5,14 +5,14 @@ import { signUp as signUpApi } from "../../../services/authApi";
 export const useSignUp = () => {
   const { mutate: signUp, isPending } = useMutation({
     mutationFn: ({
-      fullname,
+      fullName,
       email,
       password,
     }: {
-      fullname: string;
+      fullName: string;
       email: string;
       password: string;
-    }) => signUpApi(fullname, email, password),
+    }) => signUpApi(fullName, email, password),
     onSuccess: () =>
       toast.success(
         "The account is almost created! A verification message has been sent to the specified email."

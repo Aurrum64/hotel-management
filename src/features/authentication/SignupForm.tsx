@@ -16,11 +16,11 @@ const SignUpForm = () => {
   const { signUp, isPending } = useSignUp();
 
   const onSubmit: SubmitHandler<FieldValues> = ({
-    fullname,
+    fullName,
     email,
     password,
   }) => {
-    signUp({ fullname, email, password }, { onSettled: () => reset() });
+    signUp({ fullName, email, password }, { onSettled: () => reset() });
   };
 
   return (
