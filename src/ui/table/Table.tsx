@@ -9,6 +9,7 @@ import styled from "styled-components";
 import { ReactNode } from "react";
 import { Pagination } from "./components/pagination";
 import { FilterConfig } from "./types/types";
+import { useDarkModeContext } from "../../context/dark-mode-context";
 
 type TableProps = {
   tableName: TableName;
@@ -26,6 +27,7 @@ const Table = ({
   filter,
 }: TableProps) => {
   const { data, count, isPending } = useFetchTableData(tableName, filter);
+  const { isDarkMode } = useDarkModeContext();
 
   return (
     <TableContainer>
@@ -33,7 +35,9 @@ const Table = ({
         {leftToolbarItems?.map((item) => item)}
         {rightToolbarItems?.map((item) => item)}
       </ToolbarItems>
-      <AgGridReactContainer className="ag-theme-material">
+      <AgGridReactContainer
+        className={`ag-theme-material${isDarkMode ? "-dark" : ""}`}
+      >
         {isPending ? (
           <Spinner />
         ) : (
@@ -54,7 +58,7 @@ export default Table;
 const TableContainer = styled.div`
   display: flex;
   flex-direction: column;
-  background-color: white;
+  background-color: var(--color-grey-0);
 `;
 
 const ToolbarItems = styled.div`

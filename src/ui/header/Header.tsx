@@ -4,6 +4,7 @@ import ButtonIcon from "../ButtonIcon";
 import { useNavigate } from "react-router-dom";
 import { HiOutlineUser } from "react-icons/hi2";
 import Avatar from "../../features/authentication/UserAvatar";
+import DarkModeToggle from "../dark-mode-toggle";
 
 const Header = () => {
   const navigate = useNavigate();
@@ -18,6 +19,9 @@ const Header = () => {
           <ButtonIcon onClick={() => navigate("/account")}>
             <HiOutlineUser />
           </ButtonIcon>
+        </li>
+        <li>
+          <DarkModeToggle />
         </li>
         <li>
           <LogoutButton />

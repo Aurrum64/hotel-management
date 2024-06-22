@@ -1,10 +1,15 @@
 import styled from "styled-components";
+import { useDarkModeContext } from "../../context/dark-mode-context";
 
-const Logo = () => (
-  <StyledLogo>
-    <Img src="/logo-light.png" alt="Logo" />
-  </StyledLogo>
-);
+const Logo = () => {
+  const { isDarkMode } = useDarkModeContext();
+
+  return (
+    <StyledLogo>
+      <Img src={isDarkMode ? "/logo-dark.png" : "/logo-light.png"} alt="Logo" />
+    </StyledLogo>
+  );
+};
 
 export default Logo;
 

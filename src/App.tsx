@@ -13,6 +13,7 @@ import PageNotFound from "./pages/PageNotFound";
 import GLobalStyles from "./styles/GlobalStyles";
 import AppLayout from "./ui/app-layout";
 import ProtectedRoute from "./ui/protected-route";
+import { DarkModeProvider } from "./context/dark-mode-context";
 
 const queryCLient = new QueryClient({
   defaultOptions: {
@@ -25,49 +26,51 @@ const queryCLient = new QueryClient({
 function App() {
   return (
     <QueryClientProvider client={queryCLient}>
-      <ReactQueryDevtools initialIsOpen={false} />
-      <GLobalStyles />
-      <BrowserRouter>
-        <Routes>
-          <Route
-            element={
-              <ProtectedRoute>
-                <AppLayout />
-              </ProtectedRoute>
-            }
-          >
-            <Route index element={<Navigate replace to="dashboard" />} />
-            <Route path="dashboard" element={<Dashboard />} />
-            <Route path="account" element={<Account />} />
-            <Route path="bookings" element={<Bookings />} />
-            <Route path="cabins" element={<Cabins />} />
-            <Route path="settings" element={<Settings />} />
-            <Route path="users" element={<NewUsers />} />
-          </Route>
-          <Route path="login" element={<Login />} />
-          <Route path="*" element={<PageNotFound />} />
-        </Routes>
-      </BrowserRouter>
-      <Toaster
-        position="top-right"
-        gutter={12}
-        containerStyle={{ margin: "8px" }}
-        toastOptions={{
-          success: {
-            duration: 3000,
-          },
-          error: {
-            duration: 5000,
-          },
-          style: {
-            fontSize: "16px",
-            maxWidth: "500px",
-            padding: "16px 24px",
-            backgroundColor: "var(--color-grey-0)",
-            color: "var(--color-grey-700)",
-          },
-        }}
-      />
+      <DarkModeProvider>
+        <ReactQueryDevtools initialIsOpen={false} />
+        <GLobalStyles />
+        <BrowserRouter>
+          <Routes>
+            <Route
+              element={
+                <ProtectedRoute>
+                  <AppLayout />
+                </ProtectedRoute>
+              }
+            >
+              <Route index element={<Navigate replace to="dashboard" />} />
+              <Route path="dashboard" element={<Dashboard />} />
+              <Route path="account" element={<Account />} />
+              <Route path="bookings" element={<Bookings />} />
+              <Route path="cabins" element={<Cabins />} />
+              <Route path="settings" element={<Settings />} />
+              <Route path="users" element={<NewUsers />} />
+            </Route>
+            <Route path="login" element={<Login />} />
+            <Route path="*" element={<PageNotFound />} />
+          </Routes>
+        </BrowserRouter>
+        <Toaster
+          position="top-right"
+          gutter={12}
+          containerStyle={{ margin: "8px" }}
+          toastOptions={{
+            success: {
+              duration: 3000,
+            },
+            error: {
+              duration: 5000,
+            },
+            style: {
+              fontSize: "16px",
+              maxWidth: "500px",
+              padding: "16px 24px",
+              backgroundColor: "var(--color-grey-0)",
+              color: "var(--color-grey-700)",
+            },
+          }}
+        />
+      </DarkModeProvider>
     </QueryClientProvider>
   );
 }
